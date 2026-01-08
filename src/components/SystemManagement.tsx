@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BookOpen, Menu as MenuIcon } from 'lucide-react';
 import ComingSoon from './ComingSoon';
+import DictionaryManagement from './DictionaryManagement';
 
 export default function SystemManagement() {
   const [activeSubmenu, setActiveSubmenu] = useState('dictionary');
@@ -13,11 +14,11 @@ export default function SystemManagement() {
   const renderContent = () => {
     switch (activeSubmenu) {
       case 'dictionary':
-        return <ComingSoon title="字典管理待上线" />;
+        return <DictionaryManagement />;
       case 'menu':
         return <ComingSoon title="菜单管理待上线" />;
       default:
-        return <ComingSoon title="字典管理待上线" />;
+        return <DictionaryManagement />;
     }
   };
 
