@@ -7,5 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  base: '/bolt.new/',
+  base: '/Sharp_toolsOnBoltNEW/',
 });
