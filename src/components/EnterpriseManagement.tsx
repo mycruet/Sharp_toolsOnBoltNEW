@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Layers, Users, Lock, FileText } from 'lucide-react';
 import ComingSoon from './ComingSoon';
+import OrganizationManagement from './OrganizationManagement';
 
 export default function EnterpriseManagement() {
   const [activeSubmenu, setActiveSubmenu] = useState('organization');
@@ -15,7 +16,7 @@ export default function EnterpriseManagement() {
   const renderContent = () => {
     switch (activeSubmenu) {
       case 'organization':
-        return <ComingSoon title="组织机构待上线" />;
+        return <OrganizationManagement />;
       case 'users':
         return <ComingSoon title="用户管理待上线" />;
       case 'permissions':
@@ -23,7 +24,7 @@ export default function EnterpriseManagement() {
       case 'logs':
         return <ComingSoon title="操作日志待上线" />;
       default:
-        return <ComingSoon title="组织机构待上线" />;
+        return <OrganizationManagement />;
     }
   };
 
