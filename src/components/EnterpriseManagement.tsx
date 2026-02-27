@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Layers, Users, Lock, FileText, Zap } from 'lucide-react';
+import { Layers, Users, Lock, FileText } from 'lucide-react';
 import ComingSoon from './ComingSoon';
 import OrganizationManagement from './OrganizationManagement';
-import ApplicationList from './ApplicationList';
 
 export default function EnterpriseManagement() {
   const [activeSubmenu, setActiveSubmenu] = useState('organization');
@@ -12,7 +11,6 @@ export default function EnterpriseManagement() {
     { label: '用户管理', icon: Users, key: 'users' },
     { label: '权限管理', icon: Lock, key: 'permissions' },
     { label: '操作日志', icon: FileText, key: 'logs' },
-    { label: '应用管理', icon: Zap, key: 'applications' },
   ];
 
   const renderContent = () => {
@@ -25,8 +23,6 @@ export default function EnterpriseManagement() {
         return <ComingSoon title="权限管理待上线" />;
       case 'logs':
         return <ComingSoon title="操作日志待上线" />;
-      case 'applications':
-        return <ApplicationList />;
       default:
         return <OrganizationManagement />;
     }
