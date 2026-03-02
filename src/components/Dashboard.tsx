@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MessageSquare, CheckSquare, Send, LayoutGrid, Zap } from 'lucide-react';
 import ComingSoon from './ComingSoon';
+import MyApplications from './MyApplications';
 
 export default function Dashboard() {
   const [activeSubmenu, setActiveSubmenu] = useState('messages');
@@ -24,7 +25,7 @@ export default function Dashboard() {
       case 'board':
         return <ComingSoon title="我的看板待上线" />;
       case 'applications':
-        return <ComingSoon title="我的应用待上线" />;
+        return <MyApplications />;
       default:
         return <ComingSoon title="我的消息待上线" />;
     }
