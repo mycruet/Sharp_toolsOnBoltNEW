@@ -21,7 +21,7 @@ export interface User {
 
 export async function getUsersByOrganizationId(organizationId: string | null): Promise<User[]> {
   const { data, error } = await supabase
-    .from('users')
+    .from('app_users')
     .select('*')
     .eq('organization_id', organizationId)
     .order('created_at', { ascending: false });
@@ -32,7 +32,7 @@ export async function getUsersByOrganizationId(organizationId: string | null): P
 
 export async function getAllUsers(): Promise<User[]> {
   const { data, error } = await supabase
-    .from('users')
+    .from('app_users')
     .select('*')
     .order('created_at', { ascending: false });
 
@@ -42,7 +42,7 @@ export async function getAllUsers(): Promise<User[]> {
 
 export async function getUser(id: string): Promise<User | null> {
   const { data, error } = await supabase
-    .from('users')
+    .from('app_users')
     .select('*')
     .eq('id', id)
     .maybeSingle();
@@ -54,7 +54,7 @@ export async function getUser(id: string): Promise<User | null> {
 export async function createUser(user: Omit<User, 'id' | 'created_at' | 'updated_at' | 'password_hash'>): Promise<User> {
   const now = new Date().toISOString();
   const { data, error } = await supabase
-    .from('users')
+    .from('app_users')
     .insert([{
       ...user,
       created_at: now,
@@ -69,7 +69,7 @@ export async function createUser(user: Omit<User, 'id' | 'created_at' | 'updated
 
 export async function updateUser(id: string, updates: Partial<Omit<User, 'id' | 'created_at' | 'password_hash'>>): Promise<User> {
   const { data, error } = await supabase
-    .from('users')
+    .from('app_users')
     .update({
       ...updates,
       updated_at: new Date().toISOString(),
@@ -84,7 +84,7 @@ export async function updateUser(id: string, updates: Partial<Omit<User, 'id' | 
 
 export async function deleteUser(id: string): Promise<void> {
   const { error } = await supabase
-    .from('users')
+    .from('app_users')
     .delete()
     .eq('id', id);
 
@@ -93,7 +93,7 @@ export async function deleteUser(id: string): Promise<void> {
 
 export async function resetUserPassword(id: string): Promise<void> {
   const { error } = await supabase
-    .from('users')
+    .from('app_users')
     .update({
       password_hash: '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
       updated_at: new Date().toISOString(),
@@ -105,7 +105,7 @@ export async function resetUserPassword(id: string): Promise<void> {
 
 export async function setOrgLeader(id: string, isLeader: boolean): Promise<User> {
   const { data, error } = await supabase
-    .from('users')
+    .from('app_users')
     .update({
       is_org_leader: isLeader,
       updated_at: new Date().toISOString(),
