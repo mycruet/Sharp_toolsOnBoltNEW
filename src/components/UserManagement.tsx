@@ -7,7 +7,7 @@ import UserForm from './UserForm';
 export default function UserManagement() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
-  const [selectedOrgName, setSelectedOrgName] = useState<string>('根组织');
+  const [selectedOrgName, setSelectedOrgName] = useState<string>('');
   const [users, setUsers] = useState<User[]>([]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [showForm, setShowForm] = useState(false);
@@ -19,7 +19,7 @@ export default function UserManagement() {
   }, []);
 
   useEffect(() => {
-    if (organizations.length > 0 || selectedOrgId !== null) {
+    if (selectedOrgId) {
       loadUsers();
     }
   }, [selectedOrgId]);
@@ -28,9 +28,9 @@ export default function UserManagement() {
     try {
       const data = await getAllOrganizations();
       setOrganizations(data);
-      const rootOrg = data.find(o => o.parentId === null);
-      if (rootOrg) {
-        setExpandedIds(new Set([rootOrg.id]));
+      const topLevelOrgs = data.filter(o => o.parentId === null);
+      if (topLevelOrgs.length > 0) {
+        setExpandedIds(new Set(topLevelOrgs.map(o => o.id)));
       }
     } catch (error) {
       console.error('Failed to load organizations:', error);
@@ -59,14 +59,9 @@ export default function UserManagement() {
     setExpandedIds(newExpanded);
   };
 
-  const handleSelectOrg = (org: Organization | null) => {
-    if (org) {
-      setSelectedOrgId(org.id);
-      setSelectedOrgName(org.name);
-    } else {
-      setSelectedOrgId(null);
-      setSelectedOrgName('根组织');
-    }
+  const handleSelectOrg = (org: Organization) => {
+    setSelectedOrgId(org.id);
+    setSelectedOrgName(org.name);
   };
 
   const handleAddUser = async (data: Omit<User, 'id' | 'created_at' | 'updated_at' | 'password_hash'>) => {
@@ -129,14 +124,14 @@ export default function UserManagement() {
     return organizations.filter(o => o.parentId === parentId).sort((a, b) => a.order - b.order);
   };
 
-  const renderOrgTree = (org: Organization | null, depth: number = 0): JSX.Element => {
-    const children = getChildren(org?.id || null);
-    const isExpanded = org ? expandedIds.has(org.id) : true;
-    const isSelected = org ? selectedOrgId === org.id : selectedOrgId === null;
+  const renderOrgTree = (org: Organization, depth: number = 0): JSX.Element => {
+    const children = getChildren(org.id);
+    const isExpanded = expandedIds.has(org.id);
+    const isSelected = selectedOrgId === org.id;
 
     const orgElement = (
       <div
-        key={org?.id || 'root'}
+        key={org.id}
         className={`cursor-pointer hover:bg-slate-100 transition-colors ${
           isSelected ? 'bg-blue-50' : ''
         }`}
@@ -150,7 +145,7 @@ export default function UserManagement() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                if (org) toggleExpand(org.id);
+                toggleExpand(org.id);
               }}
               className="text-slate-400 hover:text-slate-600"
             >
@@ -159,7 +154,7 @@ export default function UserManagement() {
           )}
           {children.length === 0 && <div className="w-4" />}
           <span className={`text-sm ${isSelected ? 'text-blue-600 font-medium' : 'text-slate-700'}`}>
-            {org?.name || '根组织'}
+            {org.name}
           </span>
         </div>
       </div>
@@ -170,7 +165,7 @@ export default function UserManagement() {
     }
 
     return (
-      <div key={org?.id || 'root'}>
+      <div key={org.id}>
         {orgElement}
         {children.map(child => renderOrgTree(child, depth + 1))}
       </div>
@@ -186,19 +181,6 @@ export default function UserManagement() {
           <h2 className="text-sm font-bold text-slate-800">组织机构</h2>
         </div>
         <div className="py-2">
-          <div
-            className={`cursor-pointer hover:bg-slate-100 transition-colors ${
-              selectedOrgId === null ? 'bg-blue-50' : ''
-            }`}
-            onClick={() => handleSelectOrg(null)}
-          >
-            <div className="flex items-center gap-2 px-3 py-2">
-              <div className="w-4" />
-              <span className={`text-sm ${selectedOrgId === null ? 'text-blue-600 font-medium' : 'text-slate-700'}`}>
-                根组织
-              </span>
-            </div>
-          </div>
           {rootOrgs.map(org => renderOrgTree(org, 0))}
         </div>
       </aside>

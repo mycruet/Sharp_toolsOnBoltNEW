@@ -52,11 +52,13 @@ export async function getUser(id: string): Promise<User | null> {
 }
 
 export async function createUser(user: Omit<User, 'id' | 'created_at' | 'updated_at' | 'password_hash'>): Promise<User> {
+  const now = new Date().toISOString();
   const { data, error } = await supabase
     .from('users')
     .insert([{
       ...user,
-      updated_at: new Date().toISOString(),
+      created_at: now,
+      updated_at: now,
     }])
     .select()
     .single();
