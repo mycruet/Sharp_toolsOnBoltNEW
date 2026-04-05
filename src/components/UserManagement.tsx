@@ -66,12 +66,17 @@ export default function UserManagement() {
 
   const handleAddUser = async (data: Omit<User, 'id' | 'created_at' | 'updated_at' | 'password_hash'>) => {
     try {
+      if (!selectedOrgId) {
+        alert('请先选择组织');
+        return;
+      }
       await createUser(data);
       await loadUsers();
       setShowForm(false);
     } catch (error) {
       console.error('Failed to create user:', error);
-      alert('创建用户失败');
+      const errorMessage = error instanceof Error ? error.message : '创建用户失败';
+      alert(`创建用户失败: ${errorMessage}`);
     }
   };
 

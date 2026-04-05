@@ -53,18 +53,29 @@ export async function getUser(id: string): Promise<User | null> {
 
 export async function createUser(user: Omit<User, 'id' | 'created_at' | 'updated_at' | 'password_hash'>): Promise<User> {
   const now = new Date().toISOString();
+  const insertData = {
+    username: user.username,
+    nickname: user.nickname,
+    phone: user.phone || '',
+    email: user.email || '',
+    roles: user.roles || [],
+    organization_id: user.organization_id,
+    is_org_leader: user.is_org_leader || false,
+    password_hash: '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+    created_at: now,
+    updated_at: now,
+  };
+
   const { data, error } = await supabase
     .from('app_users')
-    .insert([{
-      ...user,
-      password_hash: '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
-      created_at: now,
-      updated_at: now,
-    }])
+    .insert([insertData])
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error('Insert error details:', error);
+    throw new Error(error.message || '数据库插入失败');
+  }
   return data;
 }
 
