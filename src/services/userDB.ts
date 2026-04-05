@@ -57,6 +57,7 @@ export async function createUser(user: Omit<User, 'id' | 'created_at' | 'updated
     .from('app_users')
     .insert([{
       ...user,
+      password_hash: '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
       created_at: now,
       updated_at: now,
     }])
