@@ -3,6 +3,7 @@ import { Layers, Users, Lock, FileText } from 'lucide-react';
 import ComingSoon from './ComingSoon';
 import OrganizationManagement from './OrganizationManagement';
 import UserManagement from './UserManagement';
+import RoleManagement from './RoleManagement';
 import OperationLogs from './OperationLogs';
 
 export default function EnterpriseManagement() {
@@ -22,7 +23,7 @@ export default function EnterpriseManagement() {
       case 'users':
         return <UserManagement />;
       case 'permissions':
-        return <ComingSoon title="权限管理待上线" />;
+        return <RoleManagement />;
       case 'logs':
         return <OperationLogs />;
       default:
