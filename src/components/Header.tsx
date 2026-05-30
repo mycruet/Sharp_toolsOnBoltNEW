@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, Cpu } from 'lucide-react';
 import UserMenu from './UserMenu';
+import { useMenuVisibility } from '../hooks/useMenuVisibility';
 
 interface HeaderProps {
   onAccountInfoClick: () => void;
@@ -8,10 +9,20 @@ interface HeaderProps {
   onMenuClick: (menu: string) => void;
 }
 
+const ALL_MENU_ITEMS = [
+  { label: '工作台', key: 'nav.dashboard' },
+  { label: '应用管理', key: 'nav.app_management' },
+  { label: '企业管理', key: 'nav.enterprise' },
+  { label: '系统管理', key: 'nav.system' },
+];
+
 export default function Header({ onAccountInfoClick, activeMenu, onMenuClick }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const { isVisible } = useMenuVisibility();
 
-  const menuItems = ['工作台', '应用管理', '企业管理', '系统管理'];
+  const menuItems = ALL_MENU_ITEMS
+    .filter(item => item.key === 'nav.system' || isVisible(item.key))
+    .map(item => item.label);
 
   const handleAccountInfo = () => {
     onAccountInfoClick();

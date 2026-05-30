@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Cpu, Lock, User, Waves } from 'lucide-react';
 import Header from './components/Header';
 import AccountInfoPanel from './components/AccountInfoPanel';
@@ -6,7 +6,14 @@ import Dashboard from './components/Dashboard';
 import SystemManagement from './components/SystemManagement';
 import EnterpriseManagement from './components/EnterpriseManagement';
 import ApplicationManagement from './components/ApplicationManagement';
-import ComingSoon from './components/ComingSoon';
+import { useMenuVisibility } from './hooks/useMenuVisibility';
+
+const NAV_MENU_MAP: Record<string, string> = {
+  'nav.dashboard': '工作台',
+  'nav.app_management': '应用管理',
+  'nav.enterprise': '企业管理',
+  'nav.system': '系统管理',
+};
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,6 +23,17 @@ function App() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ username: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
+  const { isVisible } = useMenuVisibility();
+
+  const visibleNavLabels = Object.entries(NAV_MENU_MAP)
+    .filter(([key]) => isVisible(key))
+    .map(([, label]) => label);
+
+  useEffect(() => {
+    if (visibleNavLabels.length > 0 && !visibleNavLabels.includes(activeMenu)) {
+      setActiveMenu(visibleNavLabels[0]);
+    }
+  }, [visibleNavLabels.length]);
 
   const validateForm = () => {
     const newErrors = { username: '', password: '' };
