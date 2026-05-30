@@ -73,21 +73,28 @@ export async function getMessageById(id: string): Promise<Message | null> {
 }
 
 export async function createMessage(userId: string, input: MessageInput): Promise<Message> {
+  const insertData = {
+    user_id: userId,
+    title: input.title,
+    content: input.content,
+    status: input.status || 'unread',
+    received_at: input.received_at || new Date().toISOString(),
+  };
+
+  console.log('Creating message with data:', insertData);
+
   const { data, error } = await supabase
     .from('messages')
-    .insert([
-      {
-        user_id: userId,
-        title: input.title,
-        content: input.content,
-        status: input.status || 'unread',
-        received_at: input.received_at || new Date().toISOString(),
-      },
-    ])
+    .insert([insertData])
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error('Create message error:', error);
+    throw error;
+  }
+
+  console.log('Created message:', data);
   return data;
 }
 
@@ -177,3 +184,6 @@ export function subscribeToUnreadCount(userId: string | undefined, callback: (co
     supabase.removeChannel(channel);
   };
 }
+
+
+export { getUnreadCount, subscribeToUnreadCount }
