@@ -184,6 +184,3 @@ export function subscribeToUnreadCount(userId: string | undefined, callback: (co
     supabase.removeChannel(channel);
   };
 }
-
-
-export { getUnreadCount, subscribeToUnreadCount }
