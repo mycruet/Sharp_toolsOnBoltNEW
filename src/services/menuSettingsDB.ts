@@ -23,7 +23,6 @@ export interface MenuItemDef {
 export const MENU_REGISTRY: MenuItemDef[] = [
   // 水平菜单（顶部导航栏）
   { key: 'nav.dashboard', label: '工作台', parentKey: 'nav', parentLabel: '水平菜单' },
-  { key: 'nav.app_management', label: '应用管理', parentKey: 'nav', parentLabel: '水平菜单' },
   { key: 'nav.enterprise', label: '企业管理', parentKey: 'nav', parentLabel: '水平菜单' },
   { key: 'nav.system', label: '系统管理', parentKey: 'nav', parentLabel: '水平菜单' },
   // 工作台
@@ -31,7 +30,6 @@ export const MENU_REGISTRY: MenuItemDef[] = [
   { key: 'dashboard.todos', label: '我的待办', parentKey: 'dashboard', parentLabel: '工作台' },
   { key: 'dashboard.initiated', label: '我的发起', parentKey: 'dashboard', parentLabel: '工作台' },
   { key: 'dashboard.board', label: '我的看板', parentKey: 'dashboard', parentLabel: '工作台' },
-  { key: 'dashboard.applications', label: '我的应用', parentKey: 'dashboard', parentLabel: '工作台' },
   // 企业管理
   { key: 'enterprise.organization', label: '组织机构', parentKey: 'enterprise', parentLabel: '企业管理' },
   { key: 'enterprise.users', label: '用户管理', parentKey: 'enterprise', parentLabel: '企业管理' },

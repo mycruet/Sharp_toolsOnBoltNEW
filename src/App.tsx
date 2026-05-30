@@ -4,13 +4,11 @@ import AccountInfoPanel from './components/AccountInfoPanel';
 import Dashboard from './components/Dashboard';
 import SystemManagement from './components/SystemManagement';
 import EnterpriseManagement from './components/EnterpriseManagement';
-import ApplicationManagement from './components/ApplicationManagement';
 import LoginPage from './components/LoginPage';
 import { useMenuVisibility } from './hooks/useMenuVisibility';
 
 const NAV_MENU_MAP: Record<string, string> = {
   'nav.dashboard': '工作台',
-  'nav.app_management': '应用管理',
   'nav.enterprise': '企业管理',
   'nav.system': '系统管理',
 };
@@ -41,8 +39,6 @@ function App() {
     switch (activeMenu) {
       case '工作台':
         return <Dashboard />;
-      case '应用管理':
-        return <ApplicationManagement />;
       case '企业管理':
         return <EnterpriseManagement />;
       case '系统管理':

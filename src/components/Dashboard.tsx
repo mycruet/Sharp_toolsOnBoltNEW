@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, CheckSquare, Send, LayoutGrid, Zap } from 'lucide-react';
+import { MessageSquare, CheckSquare, Send, LayoutGrid } from 'lucide-react';
 import ComingSoon from './ComingSoon';
-import MyApplications from './MyApplications';
 import { useMenuVisibility } from '../hooks/useMenuVisibility';
 
 export default function Dashboard() {
@@ -13,7 +12,6 @@ export default function Dashboard() {
     { label: '我的待办', icon: CheckSquare, key: 'todos', menuKey: 'dashboard.todos' },
     { label: '我的发起', icon: Send, key: 'initiated', menuKey: 'dashboard.initiated' },
     { label: '我的看板', icon: LayoutGrid, key: 'board', menuKey: 'dashboard.board' },
-    { label: '我的应用', icon: Zap, key: 'applications', menuKey: 'dashboard.applications' },
   ];
 
   const submenuItems = allSubmenuItems.filter(item => isVisible(item.menuKey));
@@ -34,8 +32,6 @@ export default function Dashboard() {
         return <ComingSoon title="我的发起待上线" />;
       case 'board':
         return <ComingSoon title="我的看板待上线" />;
-      case 'applications':
-        return <MyApplications />;
       default:
         return <ComingSoon title="我的消息待上线" />;
     }

@@ -11,7 +11,6 @@ interface HeaderProps {
 
 const ALL_MENU_ITEMS = [
   { label: '工作台', key: 'nav.dashboard' },
-  { label: '应用管理', key: 'nav.app_management' },
   { label: '企业管理', key: 'nav.enterprise' },
   { label: '系统管理', key: 'nav.system' },
 ];
