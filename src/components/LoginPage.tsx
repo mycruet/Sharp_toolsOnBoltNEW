@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Lock, User, AlertCircle } from 'lucide-react';
 
 const MOCK_USERS = [
   { username: 'admin', password: 'admin123', nickname: '系统管理员' },
@@ -198,16 +197,16 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         <div className="absolute bottom-12 left-12 right-12">
           <div className="grid grid-cols-2 gap-4">
             {[
-              { text: '无纸化办公', icon: '📄' },
-              { text: '数据与业务闭环', icon: '🔄' },
-              { text: '可视化', icon: '📊' },
-              { text: '智能决策', icon: '🧠' },
+              { text: '无纸化办公', icon: 'fa-solid fa-file-lines' },
+              { text: '数据与业务闭环', icon: 'fa-solid fa-arrows-spin' },
+              { text: '可视化', icon: 'fa-solid fa-chart-column' },
+              { text: '智能决策', icon: 'fa-solid fa-brain' },
             ].map((feature, index) => (
               <div
                 key={index}
                 className="flex items-center gap-3 px-4 py-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10"
               >
-                <span className="text-2xl">{feature.icon}</span>
+                <i className={`${feature.icon} text-2xl text-cyan-400`}></i>
                 <span className="text-white/90 font-medium">{feature.text}</span>
               </div>
             ))}
@@ -254,7 +253,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-slate-400" />
+                  <i className="fa-solid fa-user text-slate-400"></i>
                 </div>
                 <input
                   id="username"
@@ -276,7 +275,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
+                  <i className="fa-solid fa-lock text-slate-400"></i>
                 </div>
                 <input
                   id="password"
@@ -294,7 +293,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
             {error && (
               <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <i className="fa-solid fa-circle-exclamation flex-shrink-0"></i>
                 <span className="text-sm">{error}</span>
               </div>
             )}
