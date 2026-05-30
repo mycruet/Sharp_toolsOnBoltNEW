@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
 import { MessageSquare, CheckSquare, Send, LayoutGrid } from 'lucide-react';
 import ComingSoon from './ComingSoon';
+import MessagesPage from './MessagesPage';
 import { useMenuVisibility } from '../hooks/useMenuVisibility';
+import { useAuth } from '../hooks/useAuth';
+import { getUnreadCount, subscribeToUnreadCount } from '../services/messagesDB';
 
 export default function Dashboard() {
   const [activeSubmenu, setActiveSubmenu] = useState('messages');
+  const [unreadCount, setUnreadCount] = useState(0);
   const { isVisible } = useMenuVisibility();
+  const { user } = useAuth();
 
   const allSubmenuItems = [
     { label: '我的消息', icon: MessageSquare, key: 'messages', menuKey: 'dashboard.messages' },
@@ -22,10 +27,24 @@ export default function Dashboard() {
     }
   }, [submenuItems.length]);
 
+  useEffect(() => {
+    if (!user?.id) return;
+
+    // Load initial unread count
+    getUnreadCount(user.id).then(setUnreadCount).catch(console.error);
+
+    // Subscribe to changes
+    const unsubscribe = subscribeToUnreadCount(user.id, setUnreadCount);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user?.id]);
+
   const renderContent = () => {
     switch (activeSubmenu) {
       case 'messages':
-        return <ComingSoon title="我的消息待上线" />;
+        return <MessagesPage />;
       case 'todos':
         return <ComingSoon title="我的待办待上线" />;
       case 'initiated':
@@ -48,18 +67,26 @@ export default function Dashboard() {
             <nav className="space-y-2">
               {submenuItems.map((item) => {
                 const Icon = item.icon;
+                const isMessages = item.key === 'messages';
                 return (
                   <button
                     key={item.key}
                     onClick={() => setActiveSubmenu(item.key)}
-                    className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                    className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-between ${
                       activeSubmenu === item.key
                         ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
                         : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
-                    {item.label}
+                    <div className="flex items-center gap-3">
+                      <Icon className="w-5 h-5" />
+                      {item.label}
+                    </div>
+                    {isMessages && unreadCount > 0 && (
+                      <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full">
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </span>
+                    )}
                   </button>
                 );
               })}
