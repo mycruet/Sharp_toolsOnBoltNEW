@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react';
 import { MessageSquare, CheckSquare, Send, LayoutGrid } from 'lucide-react';
 import ComingSoon from './ComingSoon';
 import MessagesPage from './MessagesPage';
+import TodosPage from './TodosPage';
 import { useMenuVisibility } from '../hooks/useMenuVisibility';
 import { useAuth } from '../hooks/useAuth';
 import { getUnreadCount, subscribeToUnreadCount } from '../services/messagesDB';
+import { getPendingCount, subscribeToPendingCount } from '../services/todosDB';
 
 export default function Dashboard() {
   const [activeSubmenu, setActiveSubmenu] = useState('messages');
   const [unreadCount, setUnreadCount] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
   const { isVisible } = useMenuVisibility();
   const { user } = useAuth();
 
@@ -30,14 +33,15 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user?.id) return;
 
-    // Load initial unread count
     getUnreadCount(user.id).then(setUnreadCount).catch(console.error);
+    const unsubMessages = subscribeToUnreadCount(user.id, setUnreadCount);
 
-    // Subscribe to changes
-    const unsubscribe = subscribeToUnreadCount(user.id, setUnreadCount);
+    getPendingCount(user.id).then(setPendingCount).catch(console.error);
+    const unsubTodos = subscribeToPendingCount(user.id, setPendingCount);
 
     return () => {
-      unsubscribe();
+      unsubMessages();
+      unsubTodos();
     };
   }, [user?.id]);
 
@@ -46,7 +50,7 @@ export default function Dashboard() {
       case 'messages':
         return <MessagesPage />;
       case 'todos':
-        return <ComingSoon title="我的待办待上线" />;
+        return <TodosPage />;
       case 'initiated':
         return <ComingSoon title="我的发起待上线" />;
       case 'board':
@@ -68,6 +72,8 @@ export default function Dashboard() {
               {submenuItems.map((item) => {
                 const Icon = item.icon;
                 const isMessages = item.key === 'messages';
+                const isTodos = item.key === 'todos';
+                const badgeCount = isMessages ? unreadCount : isTodos ? pendingCount : 0;
                 return (
                   <button
                     key={item.key}
@@ -82,9 +88,11 @@ export default function Dashboard() {
                       <Icon className="w-5 h-5" />
                       {item.label}
                     </div>
-                    {isMessages && unreadCount > 0 && (
-                      <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full">
-                        {unreadCount > 99 ? '99+' : unreadCount}
+                    {(isMessages || isTodos) && badgeCount > 0 && (
+                      <span className={`inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-white text-xs font-bold rounded-full ${
+                        isMessages ? 'bg-red-500' : 'bg-amber-500'
+                      }`}>
+                        {badgeCount > 99 ? '99+' : badgeCount}
                       </span>
                     )}
                   </button>
